@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
         title: 'Flutter Freefire',
         navigatorKey: navigatorKey,
         theme: ThemeData(
-//          primaryColor: CustomColors.skfBlue,
+          primaryColor: Colors.red[800],
           fontFamily: 'Lato',
         ),
         home: Auth(),

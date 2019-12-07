@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_freefire/bloc/auth_bloc.dart';
+import 'package:flutter_freefire/main.dart';
+import 'package:flutter_freefire/screens/pin_code_verification/index.dart';
 import 'package:flutter_freefire/utils/scale_config.dart';
 import 'package:flutter_freefire/utils/validators.dart';
 import 'package:flutter_freefire/widgets/custom_input_field.dart';
@@ -77,7 +79,8 @@ class _AuthState extends State<Auth> {
                                 icon: Icon(Icons.smartphone),
                                 textInputType: TextInputType.text,
                                 textStyle: TextStyle(color: Colors.black),
-                                validateFunction: validators.validatePhoneNumber,
+                                validateFunction:
+                                    validators.validatePhoneNumber,
                                 onSaved: (String pNumber) {
                                   _phoneNumber = pNumber;
                                 },
@@ -134,7 +137,13 @@ class _AuthState extends State<Auth> {
       authBloc.stopLoading();
     } else {
       form.save();
-      print('MOBILE NUMBER - ${_phoneNumber}');
+      navigatorKey.currentState.pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => PinCodeVerification(
+            phoneNumber: _phoneNumber,
+          ),
+        ),
+      );
 //      loginBloc.login(username: _username, password: _password);
     }
   }
