@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_freefire/screens/index.dart';
+import 'package:flutter_freefire/screens/auth/index.dart';
 
 void main() => runApp(MyApp());
 
