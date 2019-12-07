@@ -1,5 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_freefire/main.dart';
+import 'package:flutter_freefire/screens/home/index.dart';
+import 'package:flutter_freefire/utils/scale_config.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class PinCodeVerification extends StatefulWidget {
@@ -13,8 +16,7 @@ class PinCodeVerification extends StatefulWidget {
 
 class _PinCodeVerificationState extends State<PinCodeVerification> {
   var onTapRecognizer;
-
-  /// this [StreamController] will take input of which function should be called
+  SizeScaleConfig scaleConfig = SizeScaleConfig();
 
   bool hasError = false;
   String currentText = "";
@@ -39,33 +41,45 @@ class _PinCodeVerificationState extends State<PinCodeVerification> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        iconTheme: IconThemeData(
+          color: Colors.red[800],
+        ),
+      ),
       body: GestureDetector(
         onTap: () {
-          FocusScope.of(context).requestFocus(new FocusNode());
+          FocusScope.of(context).requestFocus(FocusNode());
         },
         child: Container(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           child: ListView(
             children: <Widget>[
-              SizedBox(height: 30),
+              SizedBox(height: scaleConfig.scaleHeight(30)),
               Image.asset(
                 'assets/images/verify.png',
-                height: MediaQuery.of(context).size.height / 3,
+                height: SizeScaleConfig.screenHeight / 3,
                 fit: BoxFit.fitHeight,
               ),
-              SizedBox(height: 8),
+              SizedBox(height: scaleConfig.scaleHeight(8)),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                padding: EdgeInsets.symmetric(
+                    vertical: scaleConfig.scaleHeight(8.0)),
                 child: Text(
                   'Phone Number Verification',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: scaleConfig.scaleWidth(22)),
                   textAlign: TextAlign.center,
                 ),
               ),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 30.0, vertical: 8),
+                padding: EdgeInsets.symmetric(
+                    horizontal: scaleConfig.scaleWidth(30.0),
+                    vertical: scaleConfig.scaleHeight(8)),
                 child: RichText(
                   text: TextSpan(
                       text: "Enter the code sent to ",
@@ -75,27 +89,31 @@ class _PinCodeVerificationState extends State<PinCodeVerification> {
                             style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 15)),
+                                fontSize: scaleConfig.scaleWidth(15))),
                       ],
-                      style: TextStyle(color: Colors.black54, fontSize: 15)),
+                      style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: scaleConfig.scaleWidth(15))),
                   textAlign: TextAlign.center,
                 ),
               ),
               SizedBox(
-                height: 20,
+                height: scaleConfig.scaleHeight(20),
               ),
               Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 8.0, horizontal: 30),
+                  padding: EdgeInsets.symmetric(
+                      vertical: scaleConfig.scaleHeight(8.0),
+                      horizontal: scaleConfig.scaleWidth(30)),
                   child: PinCodeTextField(
                     length: 6,
                     obsecureText: false,
                     animationType: AnimationType.fade,
-                    shape: PinCodeFieldShape.underline,
+                    shape: PinCodeFieldShape.circle,
                     animationDuration: Duration(milliseconds: 300),
-                    borderRadius: BorderRadius.circular(5),
-                    fieldHeight: 50,
-                    fieldWidth: 40,
+                    borderRadius:
+                        BorderRadius.circular(scaleConfig.scaleWidth(5)),
+                    fieldHeight: scaleConfig.scaleHeight(50),
+                    fieldWidth: scaleConfig.scaleWidth(40),
                     onChanged: (value) {
                       setState(() {
                         currentText = value;
@@ -103,62 +121,76 @@ class _PinCodeVerificationState extends State<PinCodeVerification> {
                     },
                   )),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                padding: EdgeInsets.symmetric(
+                    horizontal: scaleConfig.scaleWidth(30.0)),
                 // error showing widget
                 child: Text(
                   hasError ? "*Please fill up all the cells properly" : "",
-                  style: TextStyle(color: Colors.red.shade300, fontSize: 15),
+                  style: TextStyle(
+                      color: Colors.red.shade300,
+                      fontSize: scaleConfig.scaleWidth(15)),
                 ),
               ),
               SizedBox(
-                height: 20,
+                height: scaleConfig.scaleHeight(20),
               ),
               RichText(
                 textAlign: TextAlign.center,
                 text: TextSpan(
-                    text: "Didn't receive the code? ",
-                    style: TextStyle(color: Colors.black54, fontSize: 15),
-                    children: [
-                      TextSpan(
-                          text: " RESEND",
-                          recognizer: onTapRecognizer,
-                          style: TextStyle(
-                              color: Colors.red[800],
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16))
-                    ]),
+                  text: "Didn't receive the code? ",
+                  style: TextStyle(
+                      color: Colors.black54,
+                      fontSize: scaleConfig.scaleWidth(15)),
+                  children: [
+                    TextSpan(
+                      text: " RESEND",
+                      recognizer: onTapRecognizer,
+                      style: TextStyle(
+                        color: Colors.red[800],
+                        fontWeight: FontWeight.bold,
+                        fontSize: scaleConfig.scaleWidth(16),
+                      ),
+                    )
+                  ],
+                ),
               ),
               SizedBox(
-                height: 14,
+                height: scaleConfig.scaleHeight(14),
               ),
               Container(
-                margin:
-                    const EdgeInsets.symmetric(vertical: 16.0, horizontal: 30),
+                margin: EdgeInsets.symmetric(
+                    vertical: scaleConfig.scaleHeight(16.0),
+                    horizontal: scaleConfig.scaleWidth(30)),
                 child: ButtonTheme(
-                  height: 50,
+                  height: scaleConfig.scaleHeight(50),
                   child: FlatButton(
                     onPressed: () {
-                      // conditions for validating
-                      if (currentText.length != 6 || currentText != "towtow") {
+                      //Validating
+                      if (currentText.length != 6) {
                         setState(() {
                           hasError = true;
                         });
                       } else {
-                        setState(() {
-                          hasError = false;
-                          scaffoldKey.currentState.showSnackBar(SnackBar(
-                            content: Text("Aye!!"),
-                            duration: Duration(seconds: 2),
-                          ));
-                        });
+                        navigatorKey.currentState.push(
+                          MaterialPageRoute(
+                            builder: (context) => Home(),
+                          ),
+                        );
+//                        setState(() {
+//                          hasError = false;
+//                          scaffoldKey.currentState.showSnackBar(SnackBar(
+//                            content: Text("Verified!!"),
+//                            duration: Duration(seconds: 2),
+//                          ));
+//                        });
                       }
                     },
                     child: Center(
                         child: Text(
-                      "VERIFY".toUpperCase(),
+                      "VERIFY",
                       style: TextStyle(
                           color: Colors.white,
-                          fontSize: 18,
+                          fontSize: scaleConfig.scaleWidth(18),
                           fontWeight: FontWeight.bold),
                     )),
                   ),
@@ -170,11 +202,11 @@ class _PinCodeVerificationState extends State<PinCodeVerification> {
                       BoxShadow(
                           color: Colors.red.shade600,
                           offset: Offset(1, -2),
-                          blurRadius: 5),
+                          blurRadius: scaleConfig.scaleWidth(5)),
                       BoxShadow(
                           color: Colors.red.shade400,
                           offset: Offset(-1, 2),
-                          blurRadius: 5)
+                          blurRadius: scaleConfig.scaleWidth(5))
                     ]),
               ),
             ],

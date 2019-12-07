@@ -137,7 +137,7 @@ class _AuthState extends State<Auth> {
       authBloc.stopLoading();
     } else {
       form.save();
-      navigatorKey.currentState.pushReplacement(
+      navigatorKey.currentState.push(
         MaterialPageRoute(
           builder: (context) => PinCodeVerification(
             phoneNumber: _phoneNumber,
