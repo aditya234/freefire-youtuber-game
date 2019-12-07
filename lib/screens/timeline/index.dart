@@ -31,6 +31,8 @@ class Timeline extends StatelessWidget {
                         'Youtuber Name',
                         style: TextStyle(
                           fontSize: scaleConfig.scaleWidth(18),
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey[700],
                         ),
                       ),
                     ],
