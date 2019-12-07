@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "981526426824",
+    "firebase_url": "https://gamers-boss.firebaseio.com",
+    "project_id": "gamers-boss",
+    "storage_bucket": "gamers-boss.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:981526426824:android:2a7f077337401d7d5ce1fd",
+        "android_client_info": {
+          "package_name": "com.aditya.flutter_freefire"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "981526426824-nhkf956snhm2trcu4dq200s062c5kkif.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aditya.flutter_freefire",
+            "certificate_hash": "bd5aaa06fd3d9148c4cd8ec3ec73eb7e681ea978"
+          }
+        },
+        {
+          "client_id": "981526426824-e2upg4t0inl27s5q6973t3hl0ugv4g3n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5gB94jLKmd5I-GShNMmRFM7gJGAqkqS8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "981526426824-e2upg4t0inl27s5q6973t3hl0ugv4g3n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
