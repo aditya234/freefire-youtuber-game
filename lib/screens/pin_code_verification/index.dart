@@ -125,7 +125,7 @@ class _PinCodeVerificationState extends State<PinCodeVerification> {
                     horizontal: scaleConfig.scaleWidth(30.0)),
                 // error showing widget
                 child: Text(
-                  hasError ? "*Please fill up all the cells properly" : "",
+                  hasError ? "*Invalid verification code. Try again!" : "",
                   style: TextStyle(
                       color: Colors.red.shade300,
                       fontSize: scaleConfig.scaleWidth(15)),

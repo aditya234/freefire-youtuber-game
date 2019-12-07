@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_freefire/bloc/auth_bloc.dart';
+import 'package:flutter_freefire/bloc/home_bloc.dart';
 import 'package:flutter_freefire/screens/auth/index.dart';
 import 'package:provider/provider.dart';
 
@@ -13,6 +14,9 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<AuthBloc>.value(
           value: AuthBloc(),
+        ),
+        ChangeNotifierProvider<HomeBloc>.value(
+          value: HomeBloc(),
         )
       ],
       child: MaterialApp(
