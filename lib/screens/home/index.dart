@@ -25,7 +25,6 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[200],
-//
       body: Padding(
         padding: EdgeInsets.only(top: scaleConfig.scaleHeight(40)),
         child: (homeBloc.currentIndex == 0)
