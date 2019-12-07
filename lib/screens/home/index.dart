@@ -26,7 +26,9 @@ class _HomeState extends State<Home> {
     return Scaffold(
       backgroundColor: Colors.grey[200],
       body: Padding(
-        padding: EdgeInsets.only(top: scaleConfig.scaleHeight(40)),
+        padding: EdgeInsets.only(
+          top: scaleConfig.scaleHeight((homeBloc.currentIndex != 2) ? 40 : 0),
+        ),
         child: (homeBloc.currentIndex == 0)
             ? Timeline()
             : (homeBloc.currentIndex == 1) ? Youtubers() : Profile(),
