@@ -1,9 +1,19 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_freefire/utils/scale_config.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class YoutuberDetails extends StatelessWidget {
+class YoutuberDetails extends StatefulWidget {
+  @override
+  _YoutuberDetailsState createState() => _YoutuberDetailsState();
+}
+
+class _YoutuberDetailsState extends State<YoutuberDetails> {
   SizeScaleConfig scaleConfig = SizeScaleConfig();
+
+  File _avatar;
 
   @override
   Widget build(BuildContext context) {
@@ -40,9 +50,11 @@ class YoutuberDetails extends StatelessWidget {
                               shape: BoxShape.circle,
                               color: Colors.grey[200],
                               image: DecorationImage(
-                                image: AssetImage(
-                                  'assets/images/no_profile_pic.png',
-                                ),
+                                image: (_avatar == null)
+                                    ? AssetImage(
+                                        'assets/images/no_profile_pic.png',
+                                      )
+                                    : FileImage(_avatar),
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -56,7 +68,9 @@ class YoutuberDetails extends StatelessWidget {
                               child: Material(
                                 color: Colors.red[800],
                                 child: InkWell(
-                                  onTap: () {},
+                                  onTap: () {
+                                    _showImageOptions(context);
+                                  },
                                   child: Container(
                                     padding: EdgeInsets.all(
                                         scaleConfig.scaleWidth(6)),
@@ -199,5 +213,104 @@ class YoutuberDetails extends StatelessWidget {
                   ),
       ),
     );
+  }
+
+  void _showImageOptions(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(
+                  left: scaleConfig.scaleWidth(8),
+                  top: scaleConfig.scaleHeight(16),
+                ),
+                child: Text(
+                  'Select Image From',
+                  style: TextStyle(
+                    fontSize: scaleConfig.scaleWidth(22),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(
+                  left: scaleConfig.scaleWidth(8),
+                  top: scaleConfig.scaleHeight(16),
+                  bottom: scaleConfig.scaleHeight(16),
+                ),
+                child: Row(
+                  children: <Widget>[
+                    Flexible(
+                      fit: FlexFit.tight,
+                      flex: 1,
+                      child: Material(
+                        child: InkWell(
+                          onTap: () async {
+                            File newAvatar = await ImagePicker.pickImage(
+                                source: ImageSource.camera);
+                            if (newAvatar != null) {
+                              Navigator.pop(context);
+                              setState(() {
+                                _avatar = newAvatar;
+                              });
+                            }
+                          },
+                          child: Container(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Icon(
+                                  Icons.camera_alt,
+                                  size: scaleConfig.scaleWidth(60),
+                                  color: Colors.grey,
+                                ),
+                                Text('Camera'),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Flexible(
+                      fit: FlexFit.tight,
+                      flex: 1,
+                      child: Material(
+                        child: InkWell(
+                          onTap: () async {
+                            File newAvatar = await ImagePicker.pickImage(
+                                source: ImageSource.gallery);
+                            if (newAvatar != null) {
+                              Navigator.pop(context);
+                              setState(() {
+                                _avatar = newAvatar;
+                              });
+                            }
+                          },
+                          child: Container(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Icon(
+                                  Icons.dashboard,
+                                  size: scaleConfig.scaleWidth(60),
+                                  color: Colors.grey,
+                                ),
+                                Text('Gallery'),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          );
+        });
   }
 }

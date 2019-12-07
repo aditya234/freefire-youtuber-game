@@ -26,6 +26,7 @@ dependencies:
   url_launcher: ^5.2.7
   provider: ^3.2.0
   pin_code_fields: ^2.3.0+1
+  image_picker: ^0.6.2+1
 
 dev_dependencies:
   flutter_test:
