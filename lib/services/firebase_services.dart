@@ -3,9 +3,8 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseServices {
-  Future<dynamic> verifyPhoneNumber(
-      {String phoneNumber}) async {
-    Completer completer= Completer();
+  Future<dynamic> verifyPhoneNumber({String phoneNumber}) async {
+    Completer completer = Completer();
     String verificationId;
     await FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: phoneNumber,
@@ -15,29 +14,43 @@ class FirebaseServices {
         completer.complete(verificationId);
       },
       verificationFailed: (AuthException authException) {
-        print('Auth FAILED WITH EXPEPTION CODE ${authException.code}- ${authException.message}');
+        print(
+            'Auth FAILED WITH EXPEPTION CODE ${authException.code}- ${authException.message}');
         completer.complete(null);
       },
       codeSent: (String verifyId, [int forceResendingToken]) {
         verificationId = verifyId;
-        print("code sent to " + phoneNumber + " Verification id ${verificationId}");
+        print("code sent to " +
+            phoneNumber +
+            " Verification id ${verificationId}");
+        completer.complete(verificationId);
       },
       codeAutoRetrievalTimeout: (String verifyId) {
         verificationId = verifyId;
         print("time out");
+        completer.complete(null);
       },
     );
     return completer.future;
   }
 
-  authSignInUsingPhoneNumber({String smsOtp, String verificationId}) async {
+  Future<AuthResult> authSignInUsingPhoneNumber(
+      {String smsOtp, String verificationId}) async {
     final AuthCredential authCredential = PhoneAuthProvider.getCredential(
       verificationId: verificationId,
       smsCode: smsOtp,
     );
-    final AuthResult authResult =
-        await FirebaseAuth.instance.signInWithCredential(authCredential);
-    print('AUTH CRED - ${authResult.user.phoneNumber} ${authResult.user.uid}');
-    await FirebaseAuth.instance.signOut();
+    return await FirebaseAuth.instance
+        .signInWithCredential(authCredential)
+        .then((response) {
+      return response;
+    }).catchError((err) {
+      return null;
+    });
+//    print('AUTH CRED - ${authResult.user.phoneNumber} ${authResult.user.uid}');
+  }
+
+  Future signOut() async {
+    return await FirebaseAuth.instance.signOut();
   }
 }

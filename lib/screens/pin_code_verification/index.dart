@@ -1,15 +1,19 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_freefire/bloc/pin_code_verification_bloc.dart';
 import 'package:flutter_freefire/main.dart';
 import 'package:flutter_freefire/screens/home/index.dart';
 import 'package:flutter_freefire/services/firebase_services.dart';
 import 'package:flutter_freefire/utils/scale_config.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:provider/provider.dart';
 
 class PinCodeVerification extends StatefulWidget {
   final String phoneNumber;
   final String verificationId;
-  PinCodeVerification({@required this.phoneNumber,this.verificationId });
+
+  PinCodeVerification({@required this.phoneNumber, this.verificationId});
 
   @override
   _PinCodeVerificationState createState() => _PinCodeVerificationState();
@@ -18,9 +22,7 @@ class PinCodeVerification extends StatefulWidget {
 class _PinCodeVerificationState extends State<PinCodeVerification> {
   var onTapRecognizer;
   SizeScaleConfig scaleConfig = SizeScaleConfig();
-
-  bool hasError = false;
-  String currentText = "";
+  PinCodeVerificationBloc pinCodeVerificationBloc;
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -34,8 +36,9 @@ class _PinCodeVerificationState extends State<PinCodeVerification> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    pinCodeVerificationBloc = Provider.of<PinCodeVerificationBloc>(context);
   }
 
   @override
@@ -116,9 +119,7 @@ class _PinCodeVerificationState extends State<PinCodeVerification> {
                     fieldHeight: scaleConfig.scaleHeight(50),
                     fieldWidth: scaleConfig.scaleWidth(40),
                     onChanged: (value) {
-                      setState(() {
-                        currentText = value;
-                      });
+                      pinCodeVerificationBloc.setNewPinValue(value);
                     },
                   )),
               Padding(
@@ -126,7 +127,9 @@ class _PinCodeVerificationState extends State<PinCodeVerification> {
                     horizontal: scaleConfig.scaleWidth(30.0)),
                 // error showing widget
                 child: Text(
-                  hasError ? "*Invalid verification code. Try again!" : "",
+                  pinCodeVerificationBloc.hasError
+                      ? "*Invalid verification code. Try again!"
+                      : "",
                   style: TextStyle(
                       color: Colors.red.shade300,
                       fontSize: scaleConfig.scaleWidth(15)),
@@ -165,27 +168,31 @@ class _PinCodeVerificationState extends State<PinCodeVerification> {
                 child: ButtonTheme(
                   height: scaleConfig.scaleHeight(50),
                   child: FlatButton(
-                    onPressed: () async{
+                    onPressed: () async {
                       //Validating
-                      if (currentText.length != 6) {
-                        setState(() {
-                          hasError = true;
-                        });
+                      if (pinCodeVerificationBloc.pinCode.length != 6) {
+                        pinCodeVerificationBloc.setHasError(true);
                       } else {
-                        await FirebaseServices().authSignInUsingPhoneNumber(verificationId: widget.verificationId,smsOtp:currentText );
+                        AuthResult authResult = await FirebaseServices()
+                            .authSignInUsingPhoneNumber(
+                                verificationId: widget.verificationId,
+                                smsOtp: pinCodeVerificationBloc.pinCode);
 
-//                        navigatorKey.currentState.push(
-//                          MaterialPageRoute(
-//                            builder: (context) => Home(),
-//                          ),
-//                        );
-//                        setState(() {
-//                          hasError = false;
-//                          scaffoldKey.currentState.showSnackBar(SnackBar(
-//                            content: Text("Verified!!"),
-//                            duration: Duration(seconds: 2),
-//                          ));
-//                        });
+                        if ((authResult != null) &&
+                            (authResult.user != null) &&
+                            (authResult.user.uid != null)) {
+                          navigatorKey.currentState.push(
+                            MaterialPageRoute(
+                              builder: (context) => Home(),
+                            ),
+                          );
+                        } else {
+                          pinCodeVerificationBloc.setHasError(false);
+                          scaffoldKey.currentState.showSnackBar(SnackBar(
+                            content: Text("Invalid verification code!"),
+                            duration: Duration(seconds: 2),
+                          ));
+                        }
                       }
                     },
                     child: Center(

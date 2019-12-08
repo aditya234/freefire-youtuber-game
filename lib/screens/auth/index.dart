@@ -20,6 +20,7 @@ class _AuthState extends State<Auth> {
   bool _autoValidate = false;
   String _phoneNumber;
   AuthBloc authBloc;
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void didChangeDependencies() {
@@ -37,6 +38,7 @@ class _AuthState extends State<Auth> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -140,23 +142,24 @@ class _AuthState extends State<Auth> {
       form.save();
       final verificationId = await FirebaseServices()
           .verifyPhoneNumber(phoneNumber: "+91$_phoneNumber");
+      print('HRER - $verificationId');
       if (verificationId == null) {
-        _showSnackBar(context, "Error Sending SMS. Try again!");
+        authBloc.stopLoading();
+        _showSnackBar( "Error Sending SMS. Try again!");
       } else {
+        print("HERE");
         navigatorKey.currentState.push(
           MaterialPageRoute(
             builder: (context) => PinCodeVerification(
-              phoneNumber: _phoneNumber,
-              verificationId:verificationId
-            ),
+                phoneNumber: _phoneNumber, verificationId: verificationId),
           ),
         );
       }
     }
   }
 
-  void _showSnackBar(BuildContext context, String message) {
-    Scaffold.of(context).showSnackBar(
+  void _showSnackBar( String message) {
+    scaffoldKey.currentState.showSnackBar(
       SnackBar(
         content: Text(message),
         duration: Duration(seconds: 1),

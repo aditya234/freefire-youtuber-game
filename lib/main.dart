@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_freefire/bloc/auth_bloc.dart';
 import 'package:flutter_freefire/bloc/home_bloc.dart';
+import 'package:flutter_freefire/bloc/pin_code_verification_bloc.dart';
 import 'package:flutter_freefire/screens/auth/index.dart';
 import 'package:provider/provider.dart';
 
@@ -17,6 +18,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<HomeBloc>.value(
           value: HomeBloc(),
+        ),
+        ChangeNotifierProvider<PinCodeVerificationBloc>.value(
+          value: PinCodeVerificationBloc(),
         )
       ],
       child: MaterialApp(
