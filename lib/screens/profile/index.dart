@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_freefire/services/firebase_services.dart';
 import 'package:flutter_freefire/utils/scale_config.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -98,6 +99,33 @@ class _ProfileState extends State<Profile> {
                       SizedBox(
                         height: scaleConfig.scaleHeight(16),
                       ),
+                      ClipRRect(
+                        borderRadius:
+                            BorderRadius.circular(scaleConfig.scaleHeight(10)),
+                        child: Material(
+                          color: Colors.red[800],
+                          child: InkWell(
+                            onTap: () async {
+                              await FirebaseServices()
+                                  .signOut()
+                                  .then((response) {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                              });
+                            },
+                            child: Padding(
+                              padding:
+                                  EdgeInsets.all(scaleConfig.scaleWidth(8)),
+                              child: Text(
+                                'LOGOUT',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: scaleConfig.scaleWidth(18)),
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
                     ],
                   ),
                 ),
@@ -134,7 +162,9 @@ class _ProfileState extends State<Profile> {
                     color: Colors.grey,
                   ),
                 ),
-                SizedBox(width: scaleConfig.scaleWidth(8),),
+                SizedBox(
+                  width: scaleConfig.scaleWidth(8),
+                ),
                 Text(
                   'Details',
                   style: TextStyle(
