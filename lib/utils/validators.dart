@@ -25,7 +25,7 @@ class Validators {
     if (value.isEmpty) return 'Phone Number is required';
     if (value.length != 10) return 'Phone Number must consist 10 digits';
 
-    final RegExp phoneExp = RegExp(r'[2-9]{2}\d{8}');
+    final RegExp phoneExp = RegExp(r'[6-9]\d{9}');
     if (!phoneExp.hasMatch(value.trim()) && value.length == 10)
       return 'Invalid phone number';
     return null;

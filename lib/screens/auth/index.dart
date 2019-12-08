@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_freefire/bloc/auth_bloc.dart';
 import 'package:flutter_freefire/main.dart';
 import 'package:flutter_freefire/screens/pin_code_verification/index.dart';
+import 'package:flutter_freefire/services/firebase_services.dart';
 import 'package:flutter_freefire/utils/scale_config.dart';
 import 'package:flutter_freefire/utils/validators.dart';
 import 'package:flutter_freefire/widgets/custom_input_field.dart';
@@ -129,7 +130,7 @@ class _AuthState extends State<Auth> {
     );
   }
 
-  void _handelLogin() {
+  void _handelLogin() async {
     authBloc.startLoading();
     final FormState form = _formKey.currentState;
     if (!form.validate()) {
@@ -137,14 +138,20 @@ class _AuthState extends State<Auth> {
       authBloc.stopLoading();
     } else {
       form.save();
-      navigatorKey.currentState.push(
-        MaterialPageRoute(
-          builder: (context) => PinCodeVerification(
-            phoneNumber: _phoneNumber,
+      final verificationId = await FirebaseServices()
+          .verifyPhoneNumber(phoneNumber: "+91$_phoneNumber");
+      if (verificationId == null) {
+        _showSnackBar(context, "Error Sending SMS. Try again!");
+      } else {
+        navigatorKey.currentState.push(
+          MaterialPageRoute(
+            builder: (context) => PinCodeVerification(
+              phoneNumber: _phoneNumber,
+              verificationId:verificationId
+            ),
           ),
-        ),
-      );
-//      loginBloc.login(username: _username, password: _password);
+        );
+      }
     }
   }
 

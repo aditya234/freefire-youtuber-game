@@ -2,13 +2,14 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_freefire/main.dart';
 import 'package:flutter_freefire/screens/home/index.dart';
+import 'package:flutter_freefire/services/firebase_services.dart';
 import 'package:flutter_freefire/utils/scale_config.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class PinCodeVerification extends StatefulWidget {
   final String phoneNumber;
-
-  PinCodeVerification({@required this.phoneNumber});
+  final String verificationId;
+  PinCodeVerification({@required this.phoneNumber,this.verificationId });
 
   @override
   _PinCodeVerificationState createState() => _PinCodeVerificationState();
@@ -164,18 +165,20 @@ class _PinCodeVerificationState extends State<PinCodeVerification> {
                 child: ButtonTheme(
                   height: scaleConfig.scaleHeight(50),
                   child: FlatButton(
-                    onPressed: () {
+                    onPressed: () async{
                       //Validating
                       if (currentText.length != 6) {
                         setState(() {
                           hasError = true;
                         });
                       } else {
-                        navigatorKey.currentState.push(
-                          MaterialPageRoute(
-                            builder: (context) => Home(),
-                          ),
-                        );
+                        await FirebaseServices().authSignInUsingPhoneNumber(verificationId: widget.verificationId,smsOtp:currentText );
+
+//                        navigatorKey.currentState.push(
+//                          MaterialPageRoute(
+//                            builder: (context) => Home(),
+//                          ),
+//                        );
 //                        setState(() {
 //                          hasError = false;
 //                          scaffoldKey.currentState.showSnackBar(SnackBar(
